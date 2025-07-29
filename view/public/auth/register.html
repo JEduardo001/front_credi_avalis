@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro</title>
+  <link rel="stylesheet" href="../../../styles/auth/register.css">
+  <link rel="stylesheet"   href="../../../styles/global/modal.css"></link>
+
+</head>
+<body>
+  <header>
+    <h1>Credi Avalis</h1>
+    <h2>Regístrate</h2>
+  </header>
+  
+  <div id="modal">
+    <p id="titleModal">Ocurrió un problema</p>
+    <p id="messageModal"></p>
+    <button id="btnCloseModal">Aceptar</button>
+  </div>
+
+  <form id="form">
+    <label for="inputUsername">Username</label>
+    <input type="text" id="inputUsername" placeholder="Username" required />
+
+    <label for="inputPassword">Password</label>
+    <input type="password" id="inputPassword" placeholder="Password" required />
+
+    <label for="inputRepeatPassword">Repeat Password</label>
+    <input type="password" id="inputRepeatPassword" placeholder="Repite la contraseña" required />
+
+    <button type="submit">Registrar</button>
+  </form>
+  
+  <script type="module" src="../../../controller/auth/register.js"></script>
+  <script type="module" src="../../../controller/global/modal.js"></script>
+  <script type="module" src="../../../controller/global/typeMessageError.js"></script>
+</body>
+</html>
