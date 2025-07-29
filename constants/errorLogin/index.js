@@ -3,3 +3,7 @@ export const errorNotUserFound = "No se encontró el usuario";
 export const errorGeneral = "Ocurrió un error, vuelve a intentarlo más tarde";
 export const errorNotSamePassword = "Las contraseñas deben ser las mismas";
 export const errorInputEmpty = "Los campos no pueden estar vacios, porfavor completalos";
+export const errorDataInIncorrectFormat = "Porfavor proporciona todos los datos en formato válido";
+export const errorLengthPassword = "Las contraseñas deben tener un mínimo de 8 caracteres";
+export const errorUsernameInUse = "El nombre de usuario ya existe, porfavor elige uno distinto";
+export const errorEmailInUse = "El email dado ya esta registrado, porfavor proporciona uno distinto";
