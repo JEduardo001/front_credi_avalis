@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detalle de Crédito</title>
+  <link rel="stylesheet" href="../../styles/protected//detailsMyCredit.css">
+  <link rel="stylesheet" href="../../styles/global/headertitle.css">
+
+</head>
+<body>
+
+  <header>
+    <h1>Detalle del Crédito</h1>
+  </header>
+
+  <div class="detalle" id="detalleCredito">
+    <!-- Detalle se inserta aquí -->
+  </div>
+
+  <div class="historial" id="historialPagos">
+    <!-- Pagos se insertan aquí -->
+  </div>
+
+  <script>
+    // Obtener ID de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const creditoId = urlParams.get("id");
+
+    // Simulación de créditos
+    const creditos = {
+      101: {
+        tipo: "Crédito Personal",
+        monto: "$50,000",
+        tasa: "12%",
+        plazo: "24 meses",
+        historial: [
+          { fecha: "2025-07-01", monto: "$2,100", estado: "PAGADO" },
+          { fecha: "2025-08-01", monto: "$2,100", estado: "PAGADO" },
+          { fecha: "2025-09-01", monto: "$2,100", estado: "PENDIENTE" }
+        ]
+      },
+      102: {
+        tipo: "Crédito Automotriz",
+        monto: "$150,000",
+        tasa: "10%",
+        plazo: "36 meses",
+        historial: [
+          { fecha: "2025-06-15", monto: "$4,500", estado: "PAGADO" },
+          { fecha: "2025-07-15", monto: "$4,500", estado: "PAGADO" }
+        ]
+      }
+    };
+
+    const credito = creditos[101];
+    const detalleDiv = document.getElementById("detalleCredito");
+    const historialDiv = document.getElementById("historialPagos");
+
+    if (credito) {
+      detalleDiv.innerHTML = `
+        <h2>${credito.tipo}</h2>
+        <p><strong>Monto:</strong> ${credito.monto}</p>
+        <p><strong>Tasa de interés:</strong> ${credito.tasa}</p>
+        <p><strong>Plazo:</strong> ${credito.plazo}</p>
+      `;
+
+      historialDiv.innerHTML = "<h2>Historial de Pagos</h2>";
+
+      credito.historial.forEach(pago => {
+        const pagoDiv = document.createElement("div");
+        pagoDiv.className = `pago ${pago.estado.toLowerCase()}`;
+        pagoDiv.innerHTML = `
+          <p><strong>Fecha:</strong> ${pago.fecha}</p>
+          <p><strong>Monto:</strong> ${pago.monto}</p>
+          <p><strong>Estado:</strong> ${pago.estado}</p>
+        `;
+        historialDiv.appendChild(pagoDiv);
+      });
+    } else {
+      detalleDiv.innerHTML = "<p>Crédito no encontrado.</p>";
+    }
+  </script>
+
+</body>
+</html>

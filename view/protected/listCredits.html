@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CrediAvalis - Créditos Disponibles</title>
+  <link rel="stylesheet" href="../../styles/global/headertitle.css">
+  <link rel="stylesheet" href="../../styles/protected/listCredits.css">
+</head>
+<body>
+
+  <header>
+    <h1>Créditos Disponibles</h1>
+  </header>
+
+  <div class="creditos-container" id="listaCreditos">
+    <!-- Créditos se insertan aquí -->
+  </div>
+
+  <script>
+    // Simulación de créditos disponibles
+    const creditos = [
+      {
+        nombre: "Crédito Personal",
+        montoMax: "$100,000",
+        tasaInteres: "12% anual",
+        plazo: "24 meses"
+      },
+      {
+        nombre: "Crédito Automotriz",
+        montoMax: "$250,000",
+        tasaInteres: "9% anual",
+        plazo: "36 meses"
+      },
+      {
+        nombre: "Crédito de Negocio",
+        montoMax: "$500,000",
+        tasaInteres: "15% anual",
+        plazo: "48 meses"
+      }
+    ];
+
+    const contenedor = document.getElementById("listaCreditos");
+
+    creditos.forEach(credito => {
+      const div = document.createElement("div");
+      div.className = "credito";
+      div.innerHTML = `
+        <h3>${credito.nombre}</h3>
+        <p><strong>Monto máximo:</strong> ${credito.montoMax}</p>
+        <p><strong>Tasa de interés:</strong> ${credito.tasaInteres}</p>
+        <p><strong>Plazo:</strong> ${credito.plazo}</p>
+        <a href="./solicitar-credito.html" class="btn-solicitar">Solicitar</a>
+      `;
+      contenedor.appendChild(div);
+    });
+  </script>
+
+</body>
+</html>

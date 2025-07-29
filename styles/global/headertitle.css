@@ -1,0 +1,13 @@
+header {
+    width: 100%;
+    background-color: rgba(93, 232, 204, 0.182);
+    padding: 40px 20px 60px;
+    border-bottom-left-radius: 50% 20%;
+    border-bottom-right-radius: 50% 20%;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: white;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CrediAvalis - Créditos Aprobados</title>
+  <link rel="stylesheet" href="../../styles/protected//listMyAprovedCredits.css">
+  <link rel="stylesheet" href="../../styles/global/headertitle.css">
+
+</head>
+<body>
+
+  <header>
+    <h1>Créditos Aprobados</h1>
+  </header>
+
+  <div class="creditos-aprobados" id="listaCreditos">
+    <!-- Créditos se insertan aquí -->
+  </div>
+
+  <script>
+    // Simulación de créditos aprobados
+    const creditos = [
+      {
+        id: 101,
+        tipo: "Crédito Personal",
+        monto: "$50,000",
+        fechaAprobacion: "2025-06-01"
+      },
+      {
+        id: 102,
+        tipo: "Crédito Automotriz",
+        monto: "$150,000",
+        fechaAprobacion: "2025-05-10"
+      }
+    ];
+
+    const contenedor = document.getElementById("listaCreditos");
+
+    creditos.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "credito";
+      div.innerHTML = `
+        <h3>${c.tipo}</h3>
+        <p><strong>Monto aprobado:</strong> ${c.monto}</p>
+        <p><strong>Fecha de aprobación:</strong> ${c.fechaAprobacion}</p>
+      `;
+      div.onclick = () => {
+        // Redirecciona con el ID en la URL
+        window.location.href = `detalle-credito.html?id=${c.id}`;
+      };
+      contenedor.appendChild(div);
+    });
+  </script>
+
+</body>
+</html>
