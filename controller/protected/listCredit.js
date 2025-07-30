@@ -71,10 +71,10 @@ function creditAlreadySolicitedOrObtained(credit,creditsObtained,listCreditsAppl
 async function applicationCredit(idCredit,idUser,valueIdLabelTxtCreditSolicited){
     showModal()
     const titleModal = document.getElementById("titleModal")
-    const messageModal = document.getElementById("txtCreditSolicited")
+    const messageModal = document.getElementById("messageModal")
+    const btnCloseModal = document.getElementById("btnCloseModal")
 
     try{
-        
         const token = getToken()
         const idUserSave = getIdUser()
         if(!idUserSave || !token){
@@ -96,12 +96,14 @@ async function applicationCredit(idCredit,idUser,valueIdLabelTxtCreditSolicited)
         //hide request button and show message
         document.getElementById(idCredit).style.display = "none"
         document.getElementById(valueIdLabelTxtCreditSolicited).style.display = "flex"
+        btnCloseModal.style.display = "flex"
         titleModal.textContent = messageTitleSuccesCreditApplication
         insertTypeMessageErrorModal(messageContentSuccesCreditApplication)
         
 
     }catch(error){
         console.error("Error. application credit",error)
+        btnCloseModal.style.display = "flex"
         titleModal.textContent = messageErrorCeditApplication
         messageModal.textContent = messageContentErrorCeditApplication
         getTypeMessageError(errorGeneral)

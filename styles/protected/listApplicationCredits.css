@@ -70,6 +70,11 @@ body {
     color: white;
 }
 
+.estado.canceled {
+    background-color: crimson;
+    color: white;
+}
+
 #divTxtEmptyCreditsApplication {
     width: 100vw;
     height: 30vh; 
@@ -79,12 +84,14 @@ body {
 }
 
 .btn-cancel-application{
-    background-color: crimson;
+    background-color: rgb(249, 93, 125);
     font-weight: bold;
     padding: 5px 10px;
     border-radius: 6px;
     margin-top: 30px;
     display: inline-block;
     font-size: 0.9rem;
-
+}
+.btn-cancel-application:hover{
+    cursor: pointer;
 }

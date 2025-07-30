@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded",async function () {
             <h3>${creditApplication.name}</h3>
             <p><strong>Fecha:</strong> ${creditApplication.createdAt}</p>
             <p><strong>Monto solicitado:</strong> ${creditApplication.amountRequested}</p>
-            <p><strong>Estado:</strong> <span class="estado ${estadoClass}">${creditApplication.status}</span></p>
+            <p><strong>Estado:</strong>  <span id="status${creditApplication.id}" class="estado ${estadoClass}">${creditApplication.status}</span></p>
         `;
         if(estadoClass == 'pending'){
             div.innerHTML += `<p id="${creditApplication.id}" class="btn-cancel-application" >Cancelar</p>`
@@ -47,8 +47,10 @@ document.addEventListener("DOMContentLoaded",async function () {
     Array.from(btnsCancelApplication).forEach(btn => {
         btn.addEventListener("click", e => {
             const idCreditApplication = e.target.id
+            const btnCancelPressed =  document.getElementById(idCreditApplication)
+            const labelStatus = document.getElementById("status"+idCreditApplication)
             showModal()
-            //cancelCreditApplication(idCreditApplication,titleModal,messageModal,btnCloseModal)
+            cancelCreditApplication(idCreditApplication,btnCancelPressed,labelStatus,titleModal,messageModal,btnCloseModal)
         });
     });
 })
@@ -76,13 +78,13 @@ async function getCreditsApplication(idUser){
     }
 }
 
-async function cancelCreditApplication(idCreditApplication,titleModal,messageModal){
+async function cancelCreditApplication(idCreditApplication,btnCancelPressed,labelStatus,titleModal,messageModal){
     try{
         const token = getToken()
         if(!token){
             return
         }
-        const response = await fetch("http://localhost:8080/credit/cancelCreditApplication?idCreditApplication=" + idCreditApplication, {
+        const response = await fetch("http://localhost:8080/credit?idCreditApplication=" + idCreditApplication, {
             method: "PUT",
             headers: {
                 "Authorization": "Bearer " + token
@@ -90,11 +92,14 @@ async function cancelCreditApplication(idCreditApplication,titleModal,messageMod
         })
         const result = await response.json()
         if(!response.ok){
-            console.error("Error. result: " + result.message + " response: " + response )
+            throw new Error("Error. result: " + result.message + " response: " + response )
+            return
         }
+        btnCancelPressed.style.display = "none"
+        labelStatus.textContent = "CANCELED"
+        labelStatus.className = "estado canceled"
         setSuccessMessageInModal(titleModal,messageModal,btnCloseModal)
 
-        return result.message
     }catch(error){
         console.error("Error cancel credit application. ", error)
         setErrorMessageInModal(titleModal,messageModal,btnCloseModal)
