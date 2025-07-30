@@ -28,8 +28,16 @@ form.addEventListener("submit", async e => {
             showModal()
             return
         }
+        if(!data.idUser){
+            console.error("No idUser")
+            getTypeMessageError(errorGeneral)
+            showModal()
+            return
+        }
         localStorage.setItem("token", data.token);
-        console.log("todo bien")
+        localStorage.setItem("idUser", data.idUser);
+
+        window.location.href = "../../protected/home.html"
     }catch(error){
         console.log("Error login: ", error)
         getTypeMessageError(errorGeneral)

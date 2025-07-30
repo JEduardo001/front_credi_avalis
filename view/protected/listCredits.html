@@ -6,6 +6,8 @@
   <title>CrediAvalis - Créditos Disponibles</title>
   <link rel="stylesheet" href="../../styles/global/headertitle.css">
   <link rel="stylesheet" href="../../styles/protected/listCredits.css">
+  <link rel="stylesheet"   href="../../styles/global/modal.css"></link>
+
 </head>
 <body>
 
@@ -13,48 +15,19 @@
     <h1>Créditos Disponibles</h1>
   </header>
 
-  <div class="creditos-container" id="listaCreditos">
-    <!-- Créditos se insertan aquí -->
+  <div id="modal">
+    <p id="titleModal">Solicitando Crédito...</p>
+    <p id="messageModal">Porfavor espera</p>
+    <button id="btnCloseModal">Aceptar</button>
   </div>
 
-  <script>
-    // Simulación de créditos disponibles
-    const creditos = [
-      {
-        nombre: "Crédito Personal",
-        montoMax: "$100,000",
-        tasaInteres: "12% anual",
-        plazo: "24 meses"
-      },
-      {
-        nombre: "Crédito Automotriz",
-        montoMax: "$250,000",
-        tasaInteres: "9% anual",
-        plazo: "36 meses"
-      },
-      {
-        nombre: "Crédito de Negocio",
-        montoMax: "$500,000",
-        tasaInteres: "15% anual",
-        plazo: "48 meses"
-      }
-    ];
 
-    const contenedor = document.getElementById("listaCreditos");
+  <div class="creditos-container" id="listaCreditos">
+    
+  </div>
 
-    creditos.forEach(credito => {
-      const div = document.createElement("div");
-      div.className = "credito";
-      div.innerHTML = `
-        <h3>${credito.nombre}</h3>
-        <p><strong>Monto máximo:</strong> ${credito.montoMax}</p>
-        <p><strong>Tasa de interés:</strong> ${credito.tasaInteres}</p>
-        <p><strong>Plazo:</strong> ${credito.plazo}</p>
-        <a href="./solicitar-credito.html" class="btn-solicitar">Solicitar</a>
-      `;
-      contenedor.appendChild(div);
-    });
-  </script>
+  <script type="module" src="../../controller/protected/listCredit.js"></script>
+  <script type="module" src="../../controller/global/modal.js"></script>
 
 </body>
 </html>
