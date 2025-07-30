@@ -55,17 +55,36 @@ body {
     font-size: 0.9rem;
 }
 
-.estado.pendiente {
+.estado.pending {
     background-color: orange;
     color: black;
 }
 
-.estado.aprobada {
+.estado.approved {
     background-color: green;
     color: white;
 }
 
-.estado.rechazada {
+.estado.rejected {
     background-color: crimson;
     color: white;
+}
+
+#divTxtEmptyCreditsApplication {
+    width: 100vw;
+    height: 30vh; 
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-cancel-application{
+    background-color: crimson;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 6px;
+    margin-top: 30px;
+    display: inline-block;
+    font-size: 0.9rem;
+
 }

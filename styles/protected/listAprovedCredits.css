@@ -47,3 +47,11 @@ body {
 .credito p {
     margin-bottom: 5px;
 }
+
+#divTxtEmptyCreditsApproved {
+    width: 100vw;
+    height: 30vh; 
+    display: none;
+    justify-content: center;
+    align-items: center;
+}

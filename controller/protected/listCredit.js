@@ -129,7 +129,6 @@ async function fetchListCredits(){
             console.error("Error: details: ", result.message, " result: ", response)
             return
         }
-        console.log(result.data)
         return result.data
     }catch(error){
         console.error("Error loading credits", error)
