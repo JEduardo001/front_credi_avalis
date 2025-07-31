@@ -99,3 +99,96 @@ header {
     grid-template-columns: 1fr;
     }
 }
+
+.btn-reject {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: rgba(238, 72, 72, 0.695);
+    border: none;
+    border-radius: 8px;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: 100px;
+
+}
+
+.btn-reject:hover {
+    background-color: rgba(244, 128, 128, 0.575);
+}
+.btn-approved {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: rgba(72, 238, 141, 0.862);
+    border: none;
+    border-radius: 8px;
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: 100px;
+}
+
+.btn-approved:hover {
+    background-color: rgba(141, 252, 150, 0.619);
+}
+
+/* MODAL */
+
+#modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background-color: #e4e4e4;
+    border-radius: 20px;
+    padding: 15px;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+#modal.show {
+    display: flex;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+#messageModal {
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+#btnCloseModal {
+    margin-top: 15px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 7px;
+    display: none;
+}
+
+.CANCELED{
+    color: rgb(224, 32, 32);
+}
+
+.APPROVED{
+    color: #4cce52;
+}
+
+.REJECTED{
+    color: rgb(251, 73, 73);
+}
+
+.PENDING{
+    color: rgb(240, 255, 34);
+    background-color: #6c6c6c;
+    border-radius: 10px;
+    padding: 7px;
+}
