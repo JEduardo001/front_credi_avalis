@@ -43,7 +43,7 @@ async function getCreditsApproved(idUser){
         })
         const result = await response.json()
         if(!response.ok){
-            console.error("Error. result: " + result.data + " response: " + response )
+            throw new Error("Error. result: " + result.data + " response: " + response )
         }
         return result.data.creditsObtained
     }catch(error){

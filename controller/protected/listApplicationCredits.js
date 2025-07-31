@@ -70,7 +70,7 @@ async function getCreditsApplication(idUser){
         })
         const result = await response.json()
         if(!response.ok){
-            console.error("Error. result: " + result.data + " response: " + response )
+            throw new Error(response)
         }
         return result.data.listCreditsApplication
     }catch(error){
@@ -93,7 +93,6 @@ async function cancelCreditApplication(idCreditApplication,btnCancelPressed,labe
         const result = await response.json()
         if(!response.ok){
             throw new Error("Error. result: " + result.message + " response: " + response )
-            return
         }
         btnCancelPressed.style.display = "none"
         labelStatus.textContent = "CANCELED"

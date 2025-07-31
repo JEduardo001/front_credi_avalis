@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CrediAvalis - Admin</title>
+  <link rel="stylesheet" href="../../styles/admin/admin.css" />
+  <link rel="stylesheet" href="../../styles/global/modal.css" />
+
+</head>
+<body>
+  <header>
+    <h1>CrediAvalis - Panel de Administración</h1>
+  </header>
+
+  <div class="container">
+    <div class="filters">
+      <input type="text" id="filterUser" placeholder="Filtrar por ID de usuario" />
+      <select id="filterStatus">
+        <option value="">Filtrar por estado</option>
+        <option value="APPROVED">Aprobados</option>
+        <option value="PENDING">Pendientes</option>
+        <option value="REJECTED">Rechazados</option>
+        <option value="CANCELED">Cancelados</option>
+      </select>
+    </div>
+
+    <div class="credit-list" id="creditList">
+     
+    </div>
+  </div>
+
+  <script type="module" src="../../controller/admin/admin.js"></script>
+</body>
+</html>

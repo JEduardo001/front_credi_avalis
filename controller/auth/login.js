@@ -36,8 +36,12 @@ form.addEventListener("submit", async e => {
         }
         localStorage.setItem("token", data.token);
         localStorage.setItem("idUser", data.idUser);
+        if(data.isAdmin){
+            window.location.href = "../../admin/admin.html"
+        }else{
+            window.location.href = "../../protected/home.html"
+        }
 
-        window.location.href = "../../protected/home.html"
     }catch(error){
         console.log("Error login: ", error)
         getTypeMessageError(errorGeneral)

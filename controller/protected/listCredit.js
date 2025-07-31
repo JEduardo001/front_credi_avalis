@@ -90,8 +90,7 @@ async function applicationCredit(idCredit,idUser,valueIdLabelTxtCreditSolicited)
         })
         const result = response.json()
         if(!response.ok){
-            console.error("Error when trying to apply for credit. result", result.message ,+ " response: ", response)
-            return
+            throw new Error("Error when trying to apply for credit. result", result.message ,+ " response: ", response)
         }
         //hide request button and show message
         document.getElementById(idCredit).style.display = "none"
@@ -128,8 +127,8 @@ async function fetchListCredits(){
         )
         const result = await response.json()
         if(!response.ok){
-            console.error("Error: details: ", result.message, " result: ", response)
-            return
+            throw new Error("Error: details: ", result.message, " result: ", response)
+            
         }
         return result.data
     }catch(error){
@@ -140,6 +139,7 @@ async function fetchListCredits(){
 async function fetchDataUser(idUser){
     try{
         const token = getToken()
+        console.log(token)
         if(!token){
            return
         }
@@ -152,8 +152,7 @@ async function fetchDataUser(idUser){
         )
         const result = await response.json()
         if(!response.ok){
-            console.error("Error: details: ", result.message, " result: ", response)
-            return
+            throw new Error("Error: details: ", result.message, " result: ", response)
         }
       
         return result.data
