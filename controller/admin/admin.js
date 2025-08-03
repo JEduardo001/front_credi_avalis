@@ -2,13 +2,30 @@ import * as CreditTexts from "../../constants/adminOperationToCreditApplication/
 import {getToken,getIdUser} from "../global/dataToFetch/dataToFetch.js"
 import {showModal} from "../global/modal.js"
 
+//Data user
+const textIdUser = document.getElementById("idUser");
+const textNameUser = document.getElementById("NameUser");
+const textUsernameUser = document.getElementById("UsernameUser");
+const textAmountCreditsApplication = document.getElementById("amountCreditsApplication");
+const textAmountCreditsApproved = document.getElementById("amountCreditsApproved");
+const textRegistredDate = document.getElementById("registredDate");
+//modal to show data user
+const modalDataUser = document.getElementById("modalDataUser");
+const btnCloseModalDataUser = document.getElementById("btnCloseModalDataUser");
+
+btnCloseModalDataUser.addEventListener("click", e => {
+    modalDataUser.style.display = "none"
+    modalDataUser.classList.remove("show");
+
+})
+
 document.addEventListener("DOMContentLoaded",async function () {
     
     const idUser = getIdUser()
     if(!idUser){
         return
     }
-
+  
     const creditsApplication = await getAllCreditsApplication()
     const divCreditList = document.getElementById("creditList")
     
@@ -24,7 +41,20 @@ document.addEventListener("DOMContentLoaded",async function () {
                 <div><strong>Meses a pagar:</strong> ${creditApplication.monthsToPay}</div>
                 <div><strong>Interés:</strong> ${creditApplication.interestRate}%</div>
                 <div><strong>Estado:</strong> <span id="status${creditApplication.id}" class="${creditApplication.status}">${creditApplication.status}</span></div>
-                <div><strong>ID Usuario:</strong> ${creditApplication.user.id}</div>
+                <div id="divBtnShowDataUser">
+                    <strong>ID Usuario:</strong> ${creditApplication.user.id}
+                    <button  data-user='{
+                            "creditApproved": 0,
+                            "creditsApplication": 0,
+                            "email": "eduardo@gmail.com",
+                            "fullName": "fonseca",
+                            "id": 2,
+                            "registredDate": "2025-07-30",
+                            "rfc": "asdas",
+                            "username": "eduardo"
+                        }'
+                    class="btn-show-data-user"> Ver Usuario </button>
+                </div>
                 <div id="divBtns${creditApplication.id}">
                     ${setButtons(creditApplication.status,creditApplication.id)}
                 </div>
@@ -34,12 +64,22 @@ document.addEventListener("DOMContentLoaded",async function () {
 
         divCreditList.appendChild(divTarjetCreditApplication)
     })
+    
+    const btnsShowDataUser = document.getElementsByClassName("btn-show-data-user");
+
+    Array.from(btnsShowDataUser).forEach(btn => {
+        btn.addEventListener("click", e => {
+            var dataUser = e.target.getAttribute("data-user")
+            dataUser = JSON.parse(dataUser)
+            showModalDataUser(dataUser)
+        })
+    })
 
     const btnsApprovedApplicationCredit = document.getElementsByClassName("btn-approved");
 
     Array.from(btnsApprovedApplicationCredit).forEach(btn => {
         btn.addEventListener("click", e => {
-            const idCreditApplication = e.target.id
+            const idCreditApplication = e.target.dataUser
             const actionType = "APPROVED"
             insertLoadingMessageModal(actionType)
             showModal()
@@ -63,6 +103,18 @@ document.addEventListener("DOMContentLoaded",async function () {
     });
     
 })
+
+function showModalDataUser(dataUser) {
+    textIdUser.textContent = "USUARIO ID: " + dataUser.id;
+    textNameUser.textContent = "NOMBRE COMPLETO: " + dataUser.fullName;
+    textUsernameUser.textContent = "NOMBRE DE USUARIO: " + dataUser.username;
+    textAmountCreditsApplication.textContent = "TOTAL SOLICITUDES DE CRÉDITO: " + dataUser.creditsApplication;
+    textAmountCreditsApproved.textContent = "TOTAL CRÉDITOS APROVADOS: " + dataUser.creditApproved;
+    textRegistredDate.textContent = "FECHA DE REGISTRO: "  + dataUser.registredDate;
+    modalDataUser.style.display = "flex"
+    modalDataUser.classList.add("show");
+}
+
 
 function setButtons(status,idCreditApplication){
     if(status == "PENDING"){
