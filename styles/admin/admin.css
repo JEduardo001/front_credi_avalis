@@ -209,6 +209,10 @@ header {
     font-weight: bold;
 }
 
+#txtNoData{
+    font-size: 17px;
+}
+
 /* MODAL DATA USER */
 
 #modalDataUser {

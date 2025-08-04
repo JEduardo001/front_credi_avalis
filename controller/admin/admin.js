@@ -9,6 +9,9 @@ const textUsernameUser = document.getElementById("UsernameUser");
 const textAmountCreditsApplication = document.getElementById("amountCreditsApplication");
 const textAmountCreditsApproved = document.getElementById("amountCreditsApproved");
 const textRegistredDate = document.getElementById("registredDate");
+//filter
+const selectFilter = document.getElementById("filterStatus");
+
 //modal to show data user
 const modalDataUser = document.getElementById("modalDataUser");
 const btnCloseModalDataUser = document.getElementById("btnCloseModalDataUser");
@@ -16,20 +19,37 @@ const btnCloseModalDataUser = document.getElementById("btnCloseModalDataUser");
 btnCloseModalDataUser.addEventListener("click", e => {
     modalDataUser.style.display = "none"
     modalDataUser.classList.remove("show");
-
 })
 
+selectFilter.addEventListener("change", async function () {
+  const selectedValue = selectFilter.value;
+  if(selectedValue == "NoFilter"){
+    const creditsApplication = await getAllCreditsApplication()
+    setDataCreditsApplication(creditsApplication)
+    return
+  }
+  const dataFiltered = await getDataFiltered(selectedValue)  
+  setDataCreditsApplication(dataFiltered)
+
+})
 document.addEventListener("DOMContentLoaded",async function () {
-    
     const idUser = getIdUser()
     if(!idUser){
         return
     }
   
     const creditsApplication = await getAllCreditsApplication()
+    setDataCreditsApplication(creditsApplication)
+})
+
+function setDataCreditsApplication(dataCreditsApplication){
     const divCreditList = document.getElementById("creditList")
-    
-    creditsApplication.forEach(creditApplication => {
+    divCreditList.innerHTML = ""
+
+    if(dataCreditsApplication.length == 0){
+        divCreditList.innerHTML =  `<p id="txtNoData"> Sin datos </p> `
+    }
+    dataCreditsApplication.forEach(creditApplication => {
         const divTarjetCreditApplication = document.createElement("div")
         divTarjetCreditApplication.innerHTML = `
          <div class="credit-card">
@@ -101,8 +121,7 @@ document.addEventListener("DOMContentLoaded",async function () {
             rejectApplicationCredit(idCreditApplication,actionType)
         });
     });
-    
-})
+}
 
 function showModalDataUser(dataUser) {
     textIdUser.textContent = "USUARIO ID: " + dataUser.id;
@@ -195,6 +214,29 @@ async function rejectApplicationCredit(idCreditApplication,actionType){
     }catch(error){
         console.error("Error. Approve credit application", error)
         insertErrorMessageInModal(actionType)
+    }
+}
+
+async function getDataFiltered(typeFilter){
+    try{
+        const token = getToken()
+        if(!token){
+            return
+        }
+
+        const response = await fetch("http://localhost:8080/admin/credits/filterData?typeFilter=" + typeFilter,{
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        if(!response.ok){
+            throw new Error()
+        }
+        const result = await response.json()
+        return result.data.content
+    }catch(error){
+        console.error("Error obtaining leaked data", error)
     }
 }
 
