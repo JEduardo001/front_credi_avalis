@@ -1,8 +1,11 @@
 import {errorGeneral} from "../../constants/errorLogin/index.js"
 import { getTypeMessageError} from "../global/typeMessageError.js"
 import {showModal} from "../global/modal.js"
+import { apiUrl } from "../../constants/api.js"
 
 const form = document.getElementById("form")
+const btnCloseModal = document.getElementById("btnCloseModal")
+btnCloseModal.style.display = "flex"
 
 form.addEventListener("submit", async e => {
     e.preventDefault()
@@ -11,7 +14,7 @@ form.addEventListener("submit", async e => {
     const content = "?username=" + username + "&password=" + password 
     try{
         
-        const response = await fetch("http://localhost:8080/auth/login" + content ,{
+        const response = await fetch(apiUrl +"auth/login" + content ,{
             method: "POST",
             }
         )

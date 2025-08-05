@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mi Cuenta - CrediAvalis</title>
-  <link rel="stylesheet" href="../../styles/protected//profile.css">
+  <link rel="stylesheet" href="../../styles/protected/profile.css">
   <link rel="stylesheet" href="../../styles/global/headertitle.css">
-
 </head>
 <body>
 
@@ -18,40 +17,41 @@
     <h2>Información del usuario</h2>
 
     <div class="dato">
-        <label>Username:</label>
-        <span id="rfc">eduardo</span>
+      <label>Username:</label>
+      <span id="username"></span>
     </div>
 
     <div class="dato">
       <label>Nombre completo:</label>
-      <span id="nombre">Juan Pérez</span>
+      <span id="fullName"></span>
     </div>
 
     <div class="dato">
       <label>Email:</label>
-      <span id="email">juan.perez@email.com</span>
+      <span id="email"></span>
     </div>
 
     <div class="dato">
       <label>RFC:</label>
-      <span id="rfc">PEPJ8001019Q8</span>
+      <span id="rfc"></span>
     </div>
 
     <div class="dato">
       <label>Fecha de registro:</label>
-      <span id="fechaRegistro">15 de marzo de 2024</span>
+      <span id="registredDate"></span>
     </div>
 
     <div class="dato">
       <label>Número de créditos solicitados:</label>
-      <span id="creditosSolicitados">3</span>
+      <span id="creditsApplication"></span>
     </div>
 
     <div class="dato">
       <label>Créditos aprobados:</label>
-      <span id="creditosAprobados">2</span>
+      <span id="creditApproved"></span>
     </div>
   </section>
 
+  <script type="module" src="../../controller/protected/profile.js"></script>
 </body>
 </html>

@@ -1,6 +1,9 @@
 import * as CreditTexts from "../../constants/adminOperationToCreditApplication/index.js";
-import {getToken,getIdUser} from "../global/dataToFetch/dataToFetch.js"
+import {getIdUser} from "../global/dataToFetch/dataToFetch.js"
 import {showModal} from "../global/modal.js"
+import {getAllCreditsApplication,getCreditsApplicationUser,approveApplicationCredit,
+    rejectApplicationCredit,getDataUserFiltered,getDataFiltered
+} from "./fetchsAdmin.js"
 
 //Data user
 const textIdUser = document.getElementById("idUser");
@@ -11,10 +14,34 @@ const textAmountCreditsApproved = document.getElementById("amountCreditsApproved
 const textRegistredDate = document.getElementById("registredDate");
 //filter
 const selectFilter = document.getElementById("filterStatus");
+//buttons search by user
+const btnSearchByUser = document.getElementById("btnSearchByUser");
+const btnCancelSearchByUser = document.getElementById("btnCancelSearchByUser");
+//div container credits application
+const divCreditList = document.getElementById("creditList")
+
 
 //modal to show data user
 const modalDataUser = document.getElementById("modalDataUser");
 const btnCloseModalDataUser = document.getElementById("btnCloseModalDataUser");
+
+//listeners
+btnSearchByUser.addEventListener("click", async e => {
+    const idUser = document.getElementById("filterUser").value
+    if(idUser){
+        const creditsApplicationUser = await getCreditsApplicationUser(idUser)
+        setDataCreditsApplication(creditsApplicationUser)
+    }
+   
+})
+
+btnCancelSearchByUser.addEventListener("click", async e => {
+    document.getElementById("filterUser").value = ""
+    document.getElementById("filterStatus").value = "NoFilter"
+    const creditsApplication = await getAllCreditsApplication()
+    setDataCreditsApplication(creditsApplication)
+
+})
 
 btnCloseModalDataUser.addEventListener("click", e => {
     modalDataUser.style.display = "none"
@@ -23,15 +50,28 @@ btnCloseModalDataUser.addEventListener("click", e => {
 
 selectFilter.addEventListener("change", async function () {
   const selectedValue = selectFilter.value;
+  const idUser = document.getElementById("filterUser").value
+
   if(selectedValue == "NoFilter"){
-    const creditsApplication = await getAllCreditsApplication()
+    var creditsApplication
+    if(idUser){
+        creditsApplication = await getCreditsApplicationUser(idUser)
+    }else{
+        creditsApplication = await getAllCreditsApplication()
+    }
     setDataCreditsApplication(creditsApplication)
     return
   }
-  const dataFiltered = await getDataFiltered(selectedValue)  
+  var dataFiltered;
+  if(idUser){
+    dataFiltered = await getDataUserFiltered(idUser,selectedValue)  
+  }else{
+    dataFiltered = await getDataFiltered(selectedValue)  
+  }
   setDataCreditsApplication(dataFiltered)
 
 })
+
 document.addEventListener("DOMContentLoaded",async function () {
     const idUser = getIdUser()
     if(!idUser){
@@ -43,11 +83,10 @@ document.addEventListener("DOMContentLoaded",async function () {
 })
 
 function setDataCreditsApplication(dataCreditsApplication){
-    const divCreditList = document.getElementById("creditList")
     divCreditList.innerHTML = ""
 
     if(dataCreditsApplication.length == 0){
-        divCreditList.innerHTML =  `<p id="txtNoData"> Sin datos </p> `
+        setMessageToFetchData("Sin datos")
     }
     dataCreditsApplication.forEach(creditApplication => {
         const divTarjetCreditApplication = document.createElement("div")
@@ -64,14 +103,14 @@ function setDataCreditsApplication(dataCreditsApplication){
                 <div id="divBtnShowDataUser">
                     <strong>ID Usuario:</strong> ${creditApplication.user.id}
                     <button  data-user='{
-                            "creditApproved": 0,
-                            "creditsApplication": 0,
-                            "email": "eduardo@gmail.com",
-                            "fullName": "fonseca",
-                            "id": 2,
-                            "registredDate": "2025-07-30",
-                            "rfc": "asdas",
-                            "username": "eduardo"
+                            "creditApproved": "${creditApplication.user.creditApproved}",
+                            "creditsApplication": "${creditApplication.user.creditsApplication}",
+                            "email":  "${creditApplication.user.email}",
+                            "fullName": "${creditApplication.user.fullName}",
+                            "id": "${creditApplication.user.id}",
+                            "registredDate": "${creditApplication.user.registredDate}",
+                            "rfc": "${creditApplication.user.rfc}",
+                            "username": "${creditApplication.user.username}"
                         }'
                     class="btn-show-data-user"> Ver Usuario </button>
                 </div>
@@ -123,6 +162,11 @@ function setDataCreditsApplication(dataCreditsApplication){
     });
 }
 
+export function setMessageToFetchData(message){
+    divCreditList.innerHTML =  `<p id="txtNoData"> ${message} </p> `
+
+}
+
 function showModalDataUser(dataUser) {
     textIdUser.textContent = "USUARIO ID: " + dataUser.id;
     textNameUser.textContent = "NOMBRE COMPLETO: " + dataUser.fullName;
@@ -146,101 +190,8 @@ function setButtons(status,idCreditApplication){
     
 }
 
-async function getAllCreditsApplication(){
-    try{
-        const token = getToken()
-        if(!token){
-            return
-        }
-        const response = await fetch("http://localhost:8080/credit/getAllCreditsApplication", {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + token 
-            }
-        })
-        if(!response.ok){
-            throw new Error(response)
-        }
-        const result = await response.json()
-        return result.data.content
-    }catch(error){
-        console.error("Error. fetch all credits application", error)
-    }
-}
 
-async function approveApplicationCredit(idCreditApplication,idUser,actionType){
-    try{
-        const token = getToken()
-        if(!token){
-            return
-        }
-        const response = await fetch("http://localhost:8080/admin/credits/approve?idCreditApplication=" + idCreditApplication + "&idUser=" + idUser, {
-            method: "PUT",
-            headers: {
-                "Authorization": "Bearer " + token 
-            }
-        })
-        if(!response.ok){
-            throw new Error(response)
-        }
-        updateFrontNewStatus(actionType)
-        insertSuccessMessageInModal(actionType)
-
-    }catch(error){
-        console.error("Error. Approve credit application", error)
-        insertErrorMessageInModal(actionType)
-    }
-}
-
-async function rejectApplicationCredit(idCreditApplication,actionType){
-    try{
-        const token = getToken()
-        if(!token){
-            return
-        }
-        const response = await fetch("http://localhost:8080/admin/credits/reject?idCreditApplication=" + idCreditApplication, {
-            method: "PUT",
-            headers: {
-                "Authorization": "Bearer " + token 
-            }
-        })
-        if(!response.ok){
-            throw new Error(response)
-        }
-
-        updateFrontNewStatus()
-        insertSuccessMessageInModal(actionType)
-
-    }catch(error){
-        console.error("Error. Approve credit application", error)
-        insertErrorMessageInModal(actionType)
-    }
-}
-
-async function getDataFiltered(typeFilter){
-    try{
-        const token = getToken()
-        if(!token){
-            return
-        }
-
-        const response = await fetch("http://localhost:8080/admin/credits/filterData?typeFilter=" + typeFilter,{
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        })
-        if(!response.ok){
-            throw new Error()
-        }
-        const result = await response.json()
-        return result.data.content
-    }catch(error){
-        console.error("Error obtaining leaked data", error)
-    }
-}
-
-function updateFrontNewStatus(){
+export function updateFrontNewStatus(){
     //hide btns and update status credit application
     document.getElementById("divBtns"+idCreditApplication).style.display = "none"
     document.getElementById("status"+idCreditApplication).className = actionType
@@ -268,7 +219,7 @@ function insertErrorMessageInModal(typeStatus){
     }
 
 }
-function insertSuccessMessageInModal(typeStatus){
+export function insertSuccessMessageInModal(typeStatus){
     document.getElementById("btnCloseModal").style.display = "flex"
 
     switch(typeStatus){

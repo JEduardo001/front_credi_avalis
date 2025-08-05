@@ -1,8 +1,11 @@
 import {errorNotSamePassword,errorGeneral,errorInputEmpty,errorLengthPassword} from "../../constants/errorLogin/index.js"
 import {getTypeMessageError,insertTypeMessageErrorModal} from "../global/typeMessageError.js"
 import {showModal} from "../global/modal.js"
+import {apiUrl} from "../../constants/api.js"
 
 const form = document.getElementById("form")
+const btnCloseModal = document.getElementById("btnCloseModal")
+btnCloseModal.style.display = "flex"
 
 form.addEventListener("submit", async e => {
     e.preventDefault()  
@@ -43,7 +46,7 @@ form.addEventListener("submit", async e => {
     };
 
     try{
-        const response = await fetch("http://localhost:8080/auth/register", {
+        const response = await fetch(apiUrl + "auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

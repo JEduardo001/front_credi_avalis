@@ -1,10 +1,12 @@
 import {getToken,getIdUser} from "../global/dataToFetch/dataToFetch.js"
 import {showModal,hideModal} from "../global/modal.js"
+import {apiUrl} from "../../constants/api.js"
 import {errorMessageCreditApplicationCancel,
     errorTitleMessageCreditApplicationCancel,
     messageTitleSuccessCancelCreditoApplication,
     messageContentSuccessCancelCreditApplication
 } from "../../constants/applicationCredit/index.js"
+
 
 document.addEventListener("DOMContentLoaded",async function () {
     const idUser = getIdUser()
@@ -62,7 +64,7 @@ async function getCreditsApplication(idUser){
         if(!token){
             return
         }
-        const response = await fetch("http://localhost:8080/auth/authData?idUser=" + idUser, {
+        const response = await fetch(apiUrl + "auth/authData?idUser=" + idUser, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -84,7 +86,7 @@ async function cancelCreditApplication(idCreditApplication,btnCancelPressed,labe
         if(!token){
             return
         }
-        const response = await fetch("http://localhost:8080/credit?idCreditApplication=" + idCreditApplication, {
+        const response = await fetch(apiUrl + "credit?idCreditApplication=" + idCreditApplication, {
             method: "PUT",
             headers: {
                 "Authorization": "Bearer " + token

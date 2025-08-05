@@ -1,4 +1,6 @@
 import {getToken,getIdUser} from "../global/dataToFetch/dataToFetch.js"
+import {apiUrl} from "../../constants/api.js"
+
 
 document.addEventListener("DOMContentLoaded",async function () {
     const idUser = getIdUser()
@@ -35,7 +37,7 @@ async function getCreditsApproved(idUser){
         if(!token){
             return
         }
-        const response = await fetch("http://localhost:8080/auth/authData?idUser=" + idUser, {
+        const response = await fetch(apiUrl + "auth/authData?idUser=" + idUser, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token

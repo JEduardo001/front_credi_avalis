@@ -213,6 +213,26 @@ header {
     font-size: 17px;
 }
 
+#divSearchByUser{
+    display: flex;   
+}
+
+#divSearchByUser button{
+    border-radius: 7px;
+    padding: 7px;
+
+}
+
+#btnSearchByUser{
+    background-color: #a9ceff;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#btnCancelSearchByUser{
+    background-color: #ffa9a9;
+}
+
 /* MODAL DATA USER */
 
 #modalDataUser {

@@ -33,7 +33,11 @@
 
   <div class="container">
     <div class="filters">
-      <input type="text" id="filterUser" placeholder="Filtrar por ID de usuario" />
+      <div id="divSearchByUser">
+        <input type="number" id="filterUser" placeholder="Filtrar por ID de usuario" />
+        <button id="btnSearchByUser">Buscar</button>
+        <button id="btnCancelSearchByUser">Cancelar</button>
+      </div>
       <select id="filterStatus">
         <option value="NoFilter">Sin Filtros</option>
         <option value="APPROVED">Aprobados</option>

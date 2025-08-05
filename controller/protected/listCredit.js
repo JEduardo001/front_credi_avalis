@@ -1,11 +1,13 @@
 import {getToken,getIdUser} from "../global/dataToFetch/dataToFetch.js"
-import {showModal,hideModal} from "../global/modal.js"
+import {showModal} from "../global/modal.js"
 import {insertTypeMessageErrorModal} from "../global/typeMessageError.js"
+import {apiUrl} from "../../constants/api.js"
 import {messageTitleSuccesCreditApplication,
     messageContentSuccesCreditApplication,
     messageErrorCeditApplication,
     messageContentErrorCeditApplication
 } from "../../constants/applicationCredit/index.js"
+
 
 document.addEventListener("DOMContentLoaded",async function () {
     const idUser = getIdUser()
@@ -47,7 +49,6 @@ document.addEventListener("DOMContentLoaded",async function () {
         btn.addEventListener("click", e => {
             const idCredit = e.target.id
             const valueIdLabelTxtCreditSolicited = e.target.name
-            console.log(valueIdLabelTxtCreditSolicited)
             applicationCredit(idCredit,idUser,valueIdLabelTxtCreditSolicited)
         });
     });
@@ -82,7 +83,7 @@ async function applicationCredit(idCredit,idUser,valueIdLabelTxtCreditSolicited)
         }
        
         const content = "?idCredit=" + idCredit + "&idUser=" + idUser 
-        const response = await fetch("http://localhost:8080/credit" + content, {
+        const response = await fetch(apiUrl + "credit" + content, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + token
@@ -118,7 +119,7 @@ async function fetchListCredits(){
            return
         }
 
-        const response = await fetch("http://localhost:8080/credit/getAllCredits", {
+        const response = await fetch(apiUrl + "credit/getAllCredits", {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -139,11 +140,10 @@ async function fetchListCredits(){
 async function fetchDataUser(idUser){
     try{
         const token = getToken()
-        console.log(token)
         if(!token){
            return
         }
-        const response = await fetch("http://localhost:8080/auth/authData?idUser=" + idUser, {
+        const response = await fetch(apiUrl + "auth/authData?idUser=" + idUser, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
