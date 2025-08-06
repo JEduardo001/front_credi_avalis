@@ -25,7 +25,7 @@ async function getDataUser(idUser){
         if(!token){
             return
         }
-        const response = await fetch(apiUrl + "auth/authData?idUser=" + idUser, {
+        const response = await fetch(apiUrl + "auth/getDataUserAllData?idUser=" + idUser, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token

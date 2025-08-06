@@ -233,6 +233,16 @@ header {
     background-color: #ffa9a9;
 }
 
+#divPages{
+    display: flex;
+    flex-direction: row;
+}
+.class-number-page{
+    margin: 5px
+}
+.class-number-page:hover{
+    cursor: pointer;
+}
 /* MODAL DATA USER */
 
 #modalDataUser {

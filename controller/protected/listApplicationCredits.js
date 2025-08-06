@@ -45,14 +45,15 @@ document.addEventListener("DOMContentLoaded",async function () {
     })
 
     const btnsCancelApplication = document.getElementsByClassName("btn-cancel-application");
-
+    //btn cancel application credits
     Array.from(btnsCancelApplication).forEach(btn => {
         btn.addEventListener("click", e => {
             const idCreditApplication = e.target.id
             const btnCancelPressed =  document.getElementById(idCreditApplication)
             const labelStatus = document.getElementById("status"+idCreditApplication)
             showModal()
-            cancelCreditApplication(idCreditApplication,btnCancelPressed,labelStatus,titleModal,messageModal,btnCloseModal)
+            cancelCreditApplication(idCreditApplication,
+                btnCancelPressed,labelStatus,titleModal,messageModal,btnCloseModal)
         });
     });
 })
@@ -83,10 +84,11 @@ async function getCreditsApplication(idUser){
 async function cancelCreditApplication(idCreditApplication,btnCancelPressed,labelStatus,titleModal,messageModal){
     try{
         const token = getToken()
-        if(!token){
+        const idUser = getIdUser()
+        if(!token || !idUser){
             return
         }
-        const response = await fetch(apiUrl + "credit?idCreditApplication=" + idCreditApplication, {
+        const response = await fetch(apiUrl + "credit?idCreditApplication=" + idCreditApplication + "&idUser=" + idUser, {
             method: "PUT",
             headers: {
                 "Authorization": "Bearer " + token

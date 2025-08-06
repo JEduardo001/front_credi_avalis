@@ -63,3 +63,14 @@ body {
 .btn-solicitar:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
+
+#divPages{
+    display: flex;
+    flex-direction: row;
+}
+.class-number-page{
+    margin: 5px
+}
+.class-number-page:hover{
+    cursor: pointer;
+}

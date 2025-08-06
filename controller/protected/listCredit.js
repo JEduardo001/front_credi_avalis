@@ -7,7 +7,9 @@ import {messageTitleSuccesCreditApplication,
     messageErrorCeditApplication,
     messageContentErrorCeditApplication
 } from "../../constants/applicationCredit/index.js"
+import {setPages} from "./paginationToListCredits.js"
 
+var actualPageSelected
 
 document.addEventListener("DOMContentLoaded",async function () {
     const idUser = getIdUser()
@@ -15,10 +17,19 @@ document.addEventListener("DOMContentLoaded",async function () {
        return
     }
     const dataUser = await fetchDataUser(idUser)
-    const listCredits = await fetchListCredits()
+    const totalCredits =  await fetchTotalCredits()
+    setPages(0,totalCredits,idUser)
+    const listCredits = await fetchListCredits(0)
+    setCredits(listCredits,dataUser)
+
+});
+
+export function setCredits(listCredits,dataUser){
+    const idUser = dataUser.id
     var labelCreditAppication
     var txtCreditSolicited
     const contenedor = document.getElementById("listaCreditos");
+    contenedor.innerHTML = ""
     listCredits.forEach(credito => {
         const creditSolicited = creditAlreadySolicitedOrObtained(credito,dataUser.creditsObtained,dataUser.listCreditsApplication)
         if(creditSolicited){
@@ -44,7 +55,6 @@ document.addEventListener("DOMContentLoaded",async function () {
     });
 
     const btnsApplicationCredit = document.getElementsByClassName("btn-solicitar");
-
     Array.from(btnsApplicationCredit).forEach(btn => {
         btn.addEventListener("click", e => {
             const idCredit = e.target.id
@@ -52,8 +62,7 @@ document.addEventListener("DOMContentLoaded",async function () {
             applicationCredit(idCredit,idUser,valueIdLabelTxtCreditSolicited)
         });
     });
-
-});
+}
 
 function creditAlreadySolicitedOrObtained(credit,creditsObtained,listCreditsApplication){
     for(const creditObtained in creditsObtained){
@@ -93,6 +102,7 @@ async function applicationCredit(idCredit,idUser,valueIdLabelTxtCreditSolicited)
         if(!response.ok){
             throw new Error("Error when trying to apply for credit. result", result.message ,+ " response: ", response)
         }
+
         //hide request button and show message
         document.getElementById(idCredit).style.display = "none"
         document.getElementById(valueIdLabelTxtCreditSolicited).style.display = "flex"
@@ -111,7 +121,7 @@ async function applicationCredit(idCredit,idUser,valueIdLabelTxtCreditSolicited)
 
 }
 
-async function fetchListCredits(){
+export async function fetchListCredits(page){
     try{
         const token = getToken()
         const idUser = getIdUser()
@@ -119,7 +129,7 @@ async function fetchListCredits(){
            return
         }
 
-        const response = await fetch(apiUrl + "credit/getAllCredits", {
+        const response = await fetch(apiUrl + "credit/getAllCredits?pageNumber=" + page, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -131,13 +141,13 @@ async function fetchListCredits(){
             throw new Error("Error: details: ", result.message, " result: ", response)
             
         }
-        return result.data
+        return result.data.content
     }catch(error){
         console.error("Error loading credits", error)
     }
 }
 
-async function fetchDataUser(idUser){
+export async function fetchDataUser(idUser){
     try{
         const token = getToken()
         if(!token){
@@ -158,5 +168,28 @@ async function fetchDataUser(idUser){
         return result.data
     }catch(error){
         console.error("Error loading credits", error)
+    }
+}
+
+async function fetchTotalCredits(){
+    try{
+        const token = getToken()
+        if(!token){
+           return
+        }
+        const response = await fetch(apiUrl + "credit/totalCredits", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+         }
+        )
+        const result = await response.json()
+        if(!response.ok){
+            throw new Error("Error when obtaining all credits")
+        }
+        return result.data
+    }catch(error){
+        console.error("Error", error)
     }
 }

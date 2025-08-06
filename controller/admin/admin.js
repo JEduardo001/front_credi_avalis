@@ -1,9 +1,11 @@
-import * as CreditTexts from "../../constants/adminOperationToCreditApplication/index.js";
 import {getIdUser} from "../global/dataToFetch/dataToFetch.js"
 import {showModal} from "../global/modal.js"
 import {getAllCreditsApplication,getCreditsApplicationUser,approveApplicationCredit,
-    rejectApplicationCredit,getDataUserFiltered,getDataFiltered
+    rejectApplicationCredit,
+    getTotalCreditsApplication
 } from "./fetchsAdmin.js"
+import {insertLoadingMessageModal} from "./messagesModal.js"
+import {setPages,hiddenPagination,showPagination} from "./pagination.js"
 
 //Data user
 const textIdUser = document.getElementById("idUser");
@@ -12,33 +14,46 @@ const textUsernameUser = document.getElementById("UsernameUser");
 const textAmountCreditsApplication = document.getElementById("amountCreditsApplication");
 const textAmountCreditsApproved = document.getElementById("amountCreditsApproved");
 const textRegistredDate = document.getElementById("registredDate");
-//filter
-const selectFilter = document.getElementById("filterStatus");
+
 //buttons search by user
 const btnSearchByUser = document.getElementById("btnSearchByUser");
 const btnCancelSearchByUser = document.getElementById("btnCancelSearchByUser");
 //div container credits application
 const divCreditList = document.getElementById("creditList")
-
+//variables for pagination
+var pageNumber = 0
+var actualPageSelected
 
 //modal to show data user
 const modalDataUser = document.getElementById("modalDataUser");
 const btnCloseModalDataUser = document.getElementById("btnCloseModalDataUser");
 
+document.addEventListener("DOMContentLoaded",async function () {
+    const idUser = getIdUser()
+    if(!idUser){
+        return
+    }
+    const totalCreditsApplication = await getTotalCreditsApplication()
+    setPages(actualPageSelected,totalCreditsApplication)
+    const creditsApplication = await getAllCreditsApplication(pageNumber)
+    setDataCreditsApplication(creditsApplication)
+})
+
 //listeners
 btnSearchByUser.addEventListener("click", async e => {
     const idUser = document.getElementById("filterUser").value
+    hiddenPagination()
     if(idUser){
         const creditsApplicationUser = await getCreditsApplicationUser(idUser)
         setDataCreditsApplication(creditsApplicationUser)
     }
-   
 })
 
 btnCancelSearchByUser.addEventListener("click", async e => {
-    document.getElementById("filterUser").value = ""
+    document.getElementById("filterUser").value = ""    
     document.getElementById("filterStatus").value = "NoFilter"
-    const creditsApplication = await getAllCreditsApplication()
+    showPagination()
+    const creditsApplication = await getAllCreditsApplication(0)
     setDataCreditsApplication(creditsApplication)
 
 })
@@ -48,41 +63,38 @@ btnCloseModalDataUser.addEventListener("click", e => {
     modalDataUser.classList.remove("show");
 })
 
-selectFilter.addEventListener("change", async function () {
-  const selectedValue = selectFilter.value;
-  const idUser = document.getElementById("filterUser").value
+export function setMessageToFetchData(message){
+    divCreditList.innerHTML =  `<p id="txtNoData"> ${message} </p> `
+}
 
-  if(selectedValue == "NoFilter"){
-    var creditsApplication
-    if(idUser){
-        creditsApplication = await getCreditsApplicationUser(idUser)
-    }else{
-        creditsApplication = await getAllCreditsApplication()
+function showModalDataUser(dataUser) {
+    textIdUser.textContent = "USUARIO ID: " + dataUser.id;
+    textNameUser.textContent = "NOMBRE COMPLETO: " + dataUser.fullName;
+    textUsernameUser.textContent = "NOMBRE DE USUARIO: " + dataUser.username;
+    textAmountCreditsApplication.textContent = "TOTAL SOLICITUDES DE CRÉDITO: " + dataUser.creditsApplication;
+    textAmountCreditsApproved.textContent = "TOTAL CRÉDITOS APROVADOS: " + dataUser.creditApproved;
+    textRegistredDate.textContent = "FECHA DE REGISTRO: "  + dataUser.registredDate;
+    modalDataUser.style.display = "flex"
+    modalDataUser.classList.add("show");
+}
+
+function setButtons(status,idCreditApplication,idUser){
+    if(status == "PENDING"){
+        return `
+            <a id="${idCreditApplication}" idUser="${idUser}"  class="btn-approved">Aprovar</a>
+            <a id="${idCreditApplication}" idUser="${idUser}" class="btn-reject">Rechazar</a>
+        `
     }
-    setDataCreditsApplication(creditsApplication)
-    return
-  }
-  var dataFiltered;
-  if(idUser){
-    dataFiltered = await getDataUserFiltered(idUser,selectedValue)  
-  }else{
-    dataFiltered = await getDataFiltered(selectedValue)  
-  }
-  setDataCreditsApplication(dataFiltered)
+    return ""   
+}
+export function updateFrontNewStatusOfCreditsApplication(idCreditApplication,actionType){
+    //hide btns and update status credit application
+    document.getElementById("divBtns"+idCreditApplication).style.display = "none"
+    document.getElementById("status"+idCreditApplication).className = actionType
+    document.getElementById("status"+idCreditApplication).textContent = actionType
+}
 
-})
-
-document.addEventListener("DOMContentLoaded",async function () {
-    const idUser = getIdUser()
-    if(!idUser){
-        return
-    }
-  
-    const creditsApplication = await getAllCreditsApplication()
-    setDataCreditsApplication(creditsApplication)
-})
-
-function setDataCreditsApplication(dataCreditsApplication){
+export function setDataCreditsApplication(dataCreditsApplication){
     divCreditList.innerHTML = ""
 
     if(dataCreditsApplication.length == 0){
@@ -115,7 +127,7 @@ function setDataCreditsApplication(dataCreditsApplication){
                     class="btn-show-data-user"> Ver Usuario </button>
                 </div>
                 <div id="divBtns${creditApplication.id}">
-                    ${setButtons(creditApplication.status,creditApplication.id)}
+                    ${setButtons(creditApplication.status,creditApplication.id,creditApplication.user.id)}
                 </div>
             </div>
         </div>
@@ -138,12 +150,14 @@ function setDataCreditsApplication(dataCreditsApplication){
 
     Array.from(btnsApprovedApplicationCredit).forEach(btn => {
         btn.addEventListener("click", e => {
-            const idCreditApplication = e.target.dataUser
+            const idCreditApplication = e.target.id
+            const idUser = e.target.getAttribute("idUser")
+
             const actionType = "APPROVED"
             insertLoadingMessageModal(actionType)
             showModal()
            
-            approveApplicationCredit(idCreditApplication,idUser,actionType)
+            approveApplicationCredit(idCreditApplication,actionType,idUser)
         });
     });
 
@@ -160,97 +174,4 @@ function setDataCreditsApplication(dataCreditsApplication){
             rejectApplicationCredit(idCreditApplication,actionType)
         });
     });
-}
-
-export function setMessageToFetchData(message){
-    divCreditList.innerHTML =  `<p id="txtNoData"> ${message} </p> `
-
-}
-
-function showModalDataUser(dataUser) {
-    textIdUser.textContent = "USUARIO ID: " + dataUser.id;
-    textNameUser.textContent = "NOMBRE COMPLETO: " + dataUser.fullName;
-    textUsernameUser.textContent = "NOMBRE DE USUARIO: " + dataUser.username;
-    textAmountCreditsApplication.textContent = "TOTAL SOLICITUDES DE CRÉDITO: " + dataUser.creditsApplication;
-    textAmountCreditsApproved.textContent = "TOTAL CRÉDITOS APROVADOS: " + dataUser.creditApproved;
-    textRegistredDate.textContent = "FECHA DE REGISTRO: "  + dataUser.registredDate;
-    modalDataUser.style.display = "flex"
-    modalDataUser.classList.add("show");
-}
-
-
-function setButtons(status,idCreditApplication){
-    if(status == "PENDING"){
-        return `
-            <a id="${idCreditApplication}"  class="btn-approved">Aprovar</a>
-            <a id="${idCreditApplication}"  class="btn-reject">Rechazar</a>
-        `
-    }
-    return ""
-    
-}
-
-
-export function updateFrontNewStatus(){
-    //hide btns and update status credit application
-    document.getElementById("divBtns"+idCreditApplication).style.display = "none"
-    document.getElementById("status"+idCreditApplication).className = actionType
-    document.getElementById("status"+idCreditApplication).textContent = actionType
-
-}
-
-function insertErrorMessageInModal(typeStatus){
-    document.getElementById("btnCloseModal").style.display = "flex"
-
-    switch(typeStatus){
-        case "REJECTED":
-            document.getElementById("titleModal").textContent = CreditTexts.titleErrorRejectingCreditApplication
-            document.getElementById("messageModal").textContent = CreditTexts.messageErrorRejectingCreditApplication
-        break
-        case "APPROVED":
-            document.getElementById("titleModal").textContent = CreditTexts.titleErrorApprovingCreditApplication
-            document.getElementById("messageModal").textContent = CreditTexts.messageErrorApprovingCreditApplication
-        break
-        default: 
-            document.getElementById("titleModal").textContent = CreditTexts.notDefinedMessage
-            document.getElementById("messageModal").textContent = CreditTexts.notDefinedMessage
-        
-        break
-    }
-
-}
-export function insertSuccessMessageInModal(typeStatus){
-    document.getElementById("btnCloseModal").style.display = "flex"
-
-    switch(typeStatus){
-        case "REJECTED":
-            document.getElementById("titleModal").textContent = CreditTexts.titleSuccessRejectingCreditApplication
-            document.getElementById("messageModal").textContent = CreditTexts.messageSuccessRejectingCreditApplication
-        break
-        case "APPROVED":
-            document.getElementById("titleModal").textContent = CreditTexts.titleSuccessApprovingCreditApplication
-            document.getElementById("messageModal").textContent = CreditTexts.messageSuccessApprovingCreditApplication
-        break
-        default: 
-            document.getElementById("titleModal").textContent = CreditTexts.notDefinedMessage
-            document.getElementById("messageModal").textContent = CreditTexts.notDefinedMessage
-        break
-    }
-}
-
-function insertLoadingMessageModal(typeStatus){
-    document.getElementById("messageModal").textContent = CreditTexts.messageLoading
-
-    switch(typeStatus){
-        case "REJECTED":
-            document.getElementById("titleModal").textContent = CreditTexts.titleRejectingCreditApplication
-        break
-        case "APPROVED":
-            document.getElementById("titleModal").textContent = CreditTexts.titleApprovingCreditApplication
-        break
-        default: 
-            document.getElementById("titleModal").textContent = CreditTexts.notDefinedMessage    
-            document.getElementById("messageModal").textContent = CreditTexts.notDefinedMessage    
-        break
-    }
 }

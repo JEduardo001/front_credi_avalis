@@ -1,6 +1,8 @@
-import {getToken} from "../global/dataToFetch/dataToFetch.js"
+import {getToken,getIdUser} from "../global/dataToFetch/dataToFetch.js"
 import {apiUrl} from "../../constants/api.js"
-import {updateFrontNewStatus,insertSuccessMessageInModal,setMessageToFetchData} from "./admin.js"
+import {updateFrontNewStatusOfCreditsApplication,setMessageToFetchData} from "./admin.js"
+import {insertErrorMessageInModal,insertSuccessMessageInModal} from "./messagesModal.js"
+
 
 export async function getCreditsApplicationUser(idUser){
     try{
@@ -25,13 +27,13 @@ export async function getCreditsApplicationUser(idUser){
     }
 }
 
-export async function getAllCreditsApplication(){
+export async function getAllCreditsApplication(pageNumber){
     try{
         const token = getToken()
         if(!token){
             return
         }
-        const response = await fetch(apiUrl +"credit/getAllCreditsApplication", {
+        const response = await fetch(apiUrl +"credit/getAllCreditsApplication?pageNumber=" + pageNumber, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token 
@@ -48,12 +50,15 @@ export async function getAllCreditsApplication(){
     }
 }
 
-export async function approveApplicationCredit(idCreditApplication,idUser,actionType){
+export async function approveApplicationCredit(idCreditApplication,actionType,idUser){
+    /* NO USES EL GET ID USER POR QUE TOMARA EL ID USER DEL ADMIN Y TIENE QUE SER EL
+    DEL USUARIO QUE ENVIO LA SOLICITUD PARA APROBARSELA */
     try{
         const token = getToken()
         if(!token){
             return
         }
+        console.log("id user : " + idUser)
         const response = await fetch(apiUrl + "admin/credits/approve?idCreditApplication=" + idCreditApplication + "&idUser=" + idUser, {
             method: "PUT",
             headers: {
@@ -63,7 +68,7 @@ export async function approveApplicationCredit(idCreditApplication,idUser,action
         if(!response.ok){
             throw new Error(response)
         }
-        updateFrontNewStatus(actionType)
+        updateFrontNewStatusOfCreditsApplication(idCreditApplication,actionType)
         insertSuccessMessageInModal(actionType)
     }catch(error){
         console.error("Error. Approve credit application", error)
@@ -87,7 +92,7 @@ export async function rejectApplicationCredit(idCreditApplication,actionType){
             throw new Error(response)
         }
 
-        updateFrontNewStatus()
+        updateFrontNewStatusOfCreditsApplication(idCreditApplication,actionType)
         insertSuccessMessageInModal(actionType)
 
     }catch(error){
@@ -126,7 +131,6 @@ export async function getDataFiltered(typeFilter){
         if(!token){
             return
         }
-
         const response = await fetch(apiUrl + "admin/credits/filterCreditsApplication?typeFilter=" + typeFilter,{
             method: "GET",
             headers: {
@@ -137,9 +141,33 @@ export async function getDataFiltered(typeFilter){
             throw new Error()
         }
         const result = await response.json()
-        return result.data.content
+        return result.data
     }catch(error){
         console.error("Error obtaining leaked data", error)
+        setMessageToFetchData("Ocurrió un error")
+    }
+}
+
+export async function getTotalCreditsApplication(){
+    try{
+        const token = getToken()
+        if(!token){
+            return
+        }
+
+        const response = await fetch(apiUrl + "credit/getTotalCreditsApplication",{
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+        if(!response.ok){
+            throw new Error()
+        }
+        const result = await response.json()
+        return result.data
+    }catch(error){
+        console.error("Error obtaining total crredits application", error)
         setMessageToFetchData("Ocurrió un error")
     }
 }
