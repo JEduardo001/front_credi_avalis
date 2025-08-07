@@ -51,8 +51,6 @@ export async function getAllCreditsApplication(pageNumber){
 }
 
 export async function approveApplicationCredit(idCreditApplication,actionType,idUser){
-    /* NO USES EL GET ID USER POR QUE TOMARA EL ID USER DEL ADMIN Y TIENE QUE SER EL
-    DEL USUARIO QUE ENVIO LA SOLICITUD PARA APROBARSELA */
     try{
         const token = getToken()
         if(!token){

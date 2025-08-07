@@ -14,7 +14,9 @@ body {
     color: white;
 }
 
-
+h2{
+    margin-top: 20px;
+}
 .detalle {
     margin-top: 25px;;
     margin-left: 15px;
@@ -52,4 +54,32 @@ body {
 
 .pago.pendiente {
     border-left: 5px solid orange;
+}
+
+#divBtnPage{
+    display: none;
+    
+}
+#btnPage{
+    margin-left: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #a9eaff;
+}
+#txtNoPayments{
+   margin-top: 40px;
+   justify-self: center;
+}
+#divTxtCreditPaidFull{
+    display: none;
+}
+
+#divTxtCreditPaidFull p {
+    margin-top: 40px;
+   justify-self: center;
+   color: aquamarine;
+}
+
+#txtNoPayments{
+    display: none;
 }

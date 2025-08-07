@@ -2,30 +2,35 @@ import { errorGeneral,errorBadCredentials,errorNotUserFound,errorDataInIncorrect
     errorUsernameInUse,errorEmailInUse
  } from "../../constants/errorLogin/index.js"
 const messageModal = document.getElementById("messageModal")
+const titleModal = document.getElementById("titleModal")
 
 export function getTypeMessageError(message){
     switch(message){
         case "Error: The user with the granted credentials was not found":
-            insertTypeMessageErrorModal(errorBadCredentials)
+            insertTypeMessageModal(errorBadCredentials)
         break
         case "Error: The user with the username granted was not found":
-            insertTypeMessageErrorModal(errorNotUserFound)
+            insertTypeMessageModal(errorNotUserFound)
         break
         case "Error. Make sure you provide the required data in correct format and correct specifications":
-         insertTypeMessageErrorModal(errorDataInIncorrectFormat)
+            insertTypeMessageModal(errorDataInIncorrectFormat)
         break
         case "Error. Username is now in use.":
-         insertTypeMessageErrorModal(errorUsernameInUse)
+            insertTypeMessageModal(errorUsernameInUse)
         break
         case "Error. Email is now in use":
-         insertTypeMessageErrorModal(errorEmailInUse)
+            insertTypeMessageModal(errorEmailInUse)
         break
         default:
-            insertTypeMessageErrorModal(errorGeneral)
+            insertTypeMessageModal(errorGeneral)
         break
     }
 }
 
-export function insertTypeMessageErrorModal(message){
+export function insertTitleModal(title){
+    titleModal.textContent = title
+}
+
+export function insertTypeMessageModal(message){
     messageModal.textContent = message
 }

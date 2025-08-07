@@ -1,5 +1,5 @@
 import {errorNotSamePassword,errorGeneral,errorInputEmpty,errorLengthPassword} from "../../constants/errorLogin/index.js"
-import {getTypeMessageError,insertTypeMessageErrorModal} from "../global/typeMessageError.js"
+import {getTypeMessageError,insertTypeMessageModal} from "../global/typeMessageError.js"
 import {showModal} from "../global/modal.js"
 import {apiUrl} from "../../constants/api.js"
 
@@ -18,19 +18,19 @@ form.addEventListener("submit", async e => {
     const passwordRepeat = document.getElementById("inputRepeatPassword").value;
     
     if (validateInputs(fullName, username, email, birthDate, rfc, password, passwordRepeat)) {
-        insertTypeMessageErrorModal(errorInputEmpty)
+        insertTypeMessageModal(errorInputEmpty)
         showModal()     
         return;
     }
     
     if(password != passwordRepeat){
-        insertTypeMessageErrorModal(errorNotSamePassword)
+        insertTypeMessageModal(errorNotSamePassword)
         showModal()
         return
     }
 
     if(password.length < 8){
-        insertTypeMessageErrorModal(errorLengthPassword)
+        insertTypeMessageModal(errorLengthPassword)
         showModal()
         return
     }

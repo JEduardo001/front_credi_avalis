@@ -1,6 +1,6 @@
 import {getToken,getIdUser} from "../global/dataToFetch/dataToFetch.js"
 import {showModal} from "../global/modal.js"
-import {insertTypeMessageErrorModal} from "../global/typeMessageError.js"
+import {insertTypeMessageModal} from "../global/typeMessageError.js"
 import {apiUrl} from "../../constants/api.js"
 import {messageTitleSuccesCreditApplication,
     messageContentSuccesCreditApplication,
@@ -108,7 +108,7 @@ async function applicationCredit(idCredit,idUser,valueIdLabelTxtCreditSolicited)
         document.getElementById(valueIdLabelTxtCreditSolicited).style.display = "flex"
         btnCloseModal.style.display = "flex"
         titleModal.textContent = messageTitleSuccesCreditApplication
-        insertTypeMessageErrorModal(messageContentSuccesCreditApplication)
+        insertTypeMessageModal(messageContentSuccesCreditApplication)
         
 
     }catch(error){

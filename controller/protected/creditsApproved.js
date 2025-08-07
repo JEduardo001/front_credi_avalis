@@ -20,11 +20,12 @@ document.addEventListener("DOMContentLoaded",async function () {
       div.className = "credito";
       div.innerHTML = `
         <h3>${c.name}</h3>
-        <p><strong>Monto aprobado:</strong> ${c.amountPaid}</p>
+        <p><strong>Monto aprobado:</strong> ${c.credit.amountRequested}</p>
+        <p><strong>Pago total:</strong> ${c.amountToPay}</p>
         <p><strong>Fecha de aprobación:</strong> ${c.aprovedDate}</p>
       `;
       div.onclick = () => {
-        window.location.href = `detalle-credito.html?id=${c.id}`;
+        window.location.href = `./detailMyCredit.html?idCreditObtained=${c.id}`;
       };
       contenedor.appendChild(div);
     });
